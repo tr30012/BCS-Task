@@ -1,0 +1,28 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{{ doc_title }}</title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <script src="{% static 'js/index.js' %}"></script>
+</head>
+<body>
+    <a href="update/" class="double-border-button">Отправить транзакцию</a>
+    
+    <table class="tableWidget">
+        <tr>
+            <th colspan="2"> Список транзаций: </th>
+        </tr>
+        {% for tx in transactions %}
+            <tr>
+                <td> <a href="tx/{{ tx.transaction_id }}">{{ tx.transaction_id }}</a> </td>
+                <td> {{ tx.value }} BCS </td>
+            </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>

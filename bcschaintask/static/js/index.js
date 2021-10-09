@@ -1,0 +1,3 @@
+buttoncallback = function () {
+    alert("Pressed!")
+}

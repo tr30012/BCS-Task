@@ -16,6 +16,11 @@ Including another URLconf
 from django.contrib import admin
 from django.urls import path
 
+from application.views import index, update, tx
+
 urlpatterns = [
     path('admin/', admin.site.urls),
+    path('', index),
+    path('update/', update),
+    path('tx/<str:txid>/', tx)
 ]

@@ -1,0 +1,39 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title> Описание: {{ txobject.trasaction_id }} </title>
+    <link rel="stylesheet" href="{% static 'css/index.css' %}">
+    <script src="{% static 'js/index.js' %}"></script>
+</head>
+<body>
+
+    <a href="/" class="double-border-button">На главную</a>
+
+    <table class="tableWidget">
+        <tr>
+            <th colspan="2"> Описание транзации: {{ txobject.transaction_id  }}</th>
+        </tr>
+        <tr>
+            <td> ID Транзакции </td>
+            <td> {{ txobject.transaction_id  }} </td>
+        </tr>
+        <tr>
+            <td> Дата транзации </td>
+            <td> {{ txobject.datetime }} </td>
+        </tr>
+        <tr>
+            <td> Сумма транзации </td>
+            <td> {{ txobject.value }} BCS </td>
+        </tr>
+        <tr>
+            <td> Описание </td>
+            <td> <textarea cols="64" readonly="True">{{ txobject.description }} </textarea> </td>
+        </tr>
+    </table>
+</body>
+</html>

@@ -1,0 +1,58 @@
+.tableWidget {
+    text-align: left;
+    border-collapse: separate;
+    border-spacing: 5px;
+    background: #ECE9E0;
+    color: #656665;
+    border: 12px solid #ECE9E0;
+    border-radius: 20px;
+    margin-top: 10px;
+}
+
+.tableWidget th {
+    font-size: 18px;
+    padding: 10px;
+}
+
+.tableWidget td {
+    background: #F5D7BF;
+    padding: 10px;
+}
+
+.double-border-button {
+    text-decoration: none;
+    display: inline-block;
+    margin: 10px 20px;
+    padding: 10px 30px;
+    position: relative;
+    border: 2px solid #656665;
+    color: #656665;
+    font-family: 'Montserrat', sans-serif;
+    transition: .4s;
+}
+.double-border-button:after {
+    content: "";
+    position: absolute;
+    top: 0;
+    left: 0;
+    right: 0;
+    bottom: 0;
+    width: 100%;
+    height: 100%;
+    margin: auto;
+    border: 2px solid rgba(0, 0, 0, 0);
+    transition: .4s;
+}
+.double-border-button:hover:after {
+    border-color: #656665;
+    width: calc(100% - 10px);
+    height: calc(100% + 10px);
+}
+
+a {
+    text-decoration: none;
+}
+
+textarea {
+    font-size: 24px;
+}

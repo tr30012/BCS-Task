@@ -77,8 +77,11 @@ WSGI_APPLICATION = 'bcschaintask.wsgi.application'
 
 DATABASES = {
     'default': {
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db.sqlite3',
+        'ENGINE': 'django.db.backends.postgresql',
+        'NAME': 'hqeoncxs',
+        'USER': 'hqeoncxs',
+        'PASSWORD': 'WdKLsyfCggkQL_49usFayR_2pQ7P7CtZ',
+        'HOST': 'hattie.db.elephantsql.com',
     }
 }
 

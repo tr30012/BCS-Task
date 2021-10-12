@@ -1,8 +1,17 @@
+import json
+from os import spawnl
+from types import new_class
+from jsonrpclib import jsonrpc
 import requests
 import jsonrpclib as rpc
 
 from pycoin.networks.bitcoinish import create_bitcoinish_network
-from pycoin.coins.tx_utils import create_signed_tx
+from pycoin.coins.tx_utils import create_tx, sign_tx
+from pycoin.services.providers import spendables_for_address
+from pycoin.coins.bitcoin.Tx import Spendable
+from pycoin.encoding.hexbytes import h2b
+from pycoin.solve.utils import build_hash160_lookup, build_p2sh_lookup, build_sec_lookup
+from pycoin.ecdsa.secp256k1 import secp256k1_generator
 
 RPC_URL = 'http://bcs_tester:iLoveBCS@45.32.232.25:3669'
 BCS_API_URL = 'https://bcschain.info/api'
@@ -14,7 +23,22 @@ def getnewaddress():
         return answer
 
 def getutxo():
-    response = requests.get(f'{BCS_API_URL}/address/{BCS_WALLET_ADDRESS}')
+    response = requests.get(f'{BCS_API_URL}/address/{BCS_WALLET_ADDRESS}/utxo')
+    return json.loads(response.text)[0]
+
+def sendrawtransaction(hex_tx):
+    with rpc.ServerProxy(RPC_URL) as proxy:    
+        answer = proxy.sendrawtransaction(hex_tx)
+        return answer
+
+def decoderawtransaction(hex_tx):
+    with rpc.ServerProxy(RPC_URL) as proxy:    
+        answer = proxy.decoderawtransaction(hex_tx)
+        return answer
+
+def sendrawtransactionPost(hex_tx):
+    print(f'rawtx={hex_tx}')
+    response = requests.post(f'{BCS_API_URL}/tx/send', data=f'rawtx={hex_tx}')
     return response.text
 
 def create_hex64():
@@ -37,7 +61,26 @@ if __name__ == "__main__":
         bip84_pub_prefix_hex="04B24746", magic_header_hex="F1CFA6D3", default_port=3666
     )
 
+    utxo = getutxo()
 
+    s = Spendable(coin_value=int(utxo['value']),
+                 script = h2b(utxo['scriptPubKey']), 
+                 tx_hash = h2b(utxo['transactionId']), 
+                tx_out_index=int(utxo['outputIndex']))
 
+    other = getnewaddress()
 
-    print(network)
+    tx = create_tx(network, [s], [(other, 1)])
+    tx_hex = tx.as_hex()
+    wif = network.parse.wif("Kwg1kex9gQ1nVrTLUFYUGfn1AykDWNAY1JaPurouBdgFUCn2vAdS")
+    exponent = wif.secret_exponent()
+    solver = build_hash160_lookup([exponent], [secp256k1_generator])
+
+    signed_tx = tx.sign(solver)
+    signed_tx_hex = signed_tx.as_hex()
+
+    try:
+        print(sendrawtransaction(signed_tx_hex))
+    except jsonrpc.TransportError as err:
+        print(err)
+

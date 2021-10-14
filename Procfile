@@ -1,0 +1,1 @@
+web: python bcschaintask/manage.py runserver

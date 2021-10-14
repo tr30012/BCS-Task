@@ -1,8 +1,12 @@
-from django.http.response import HttpResponse
+import json
+import logging
+
 from django.shortcuts import redirect, render
 
 from application.models import Transaction
-from application.api import make_transaction
+from application.bcschain import BCSNetManager
+
+bcsnet = BCSNetManager()
 
 def index(request):
     return render(request, "application/index.html", {
@@ -11,10 +15,21 @@ def index(request):
         })
 
 def update(request):
-    
+
+    signed_tx = bcsnet.createsignedtx(
+        "Kwg1kex9gQ1nVrTLUFYUGfn1AykDWNAY1JaPurouBdgFUCn2vAdS",
+        [(bcsnet.getnewaddress(), 1)]
+    )
+
+    answer = bcsnet.sendrawtransaction(signed_tx)
+    logging.warn(answer)
+
+    decoded_tx = bcsnet.decoderawtransaction(signed_tx)
+
     Transaction(
-        transaction_id = make_transaction(),
-        value = 0.00000001
+        transaction_id = decoded_tx['txid'],
+        value = 0.00000001,
+        jsontext = json.dumps(decoded_tx)
     ).save()
 
     return redirect("/")

@@ -1,3 +1,0 @@
-buttoncallback = function () {
-    alert("Pressed!")
-}
